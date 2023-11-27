@@ -1,0 +1,38 @@
+﻿@page "/"
+@using PeopleManager.Sdk
+@using PeopleManager.Dto.Results
+@using Vives.Services.Model
+@using PeopleManager.Dto.Filters
+@inject PersonApiService PersonApiService
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<h2>Our newest members:</h2>
+
+@if (PeopleResult is null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    @foreach (var person in PeopleResult.Data)
+    {
+        <p>@person.FirstName @person.LastName (@person.Email)</p>
+    }
+}
+
+@code
+{
+    private PagedServiceResult<PersonResult, PersonFilter>? PeopleResult { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        PeopleResult = await PersonApiService.FindAsync();
+
+        await base.OnInitializedAsync();
+    }
+}
